@@ -1,55 +1,53 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import HomeView from '@/views/HomeView/HomeView.vue'
-import AboutView from '@/views/AboutView/AboutView.vue'
-import PrivacyView from '@/views/PrivacyView/PrivacyView.vue'
-// import DetailView from '@/views/DetailView/DetailView.vue'
-
+// 页面组件导入（如果路径不同，请根据你项目实际情况调整）
 import Layout from '@/layouts/index.vue'
+import AboutView from '@/views/AboutView/index.vue'
+import PrivacyView from '@/views/PrivacyView/index.vue'
+import DetailPage from '@/views/DetailPage/index.vue'
+import HomePage from '@/views/HomePage/index.vue'
 
+// 创建路由
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       component: Layout,
-      redirect: "/homepage",
+      redirect: '/',  // ✅ 主页跳转修正
       children: [
         {
-          path: "/homepage",
-          name: "homepage",
-          component: () => import("@/views/HomePage/index.vue"),
+          path: '/',
+          name: 'homepage',
+          component: HomePage,
           meta: {
-            title: "首页",
+            title: '首页',
           },
         },
         {
           path: '/detailpage',
-          name: "detailpage",
-          component: () => import("@/views/DetailPage/index.vue"),
+          name: 'detailpage',
+          component: DetailPage,
           meta: {
-            title: "详情",
+            title: '详情',
           },
         },
-      ]
+      ],
     },
-    // {
-    //   path: '/',
-    //   component: HomeView
-    // },
     {
       path: '/about',
-      component: AboutView
+      component: AboutView,
     },
     {
       path: '/privacy',
-      component: PrivacyView
+      component: PrivacyView,
     },
-    // {
-    //   path: '/:name',
-    //   component: DetailView
-    // }
-  ]
+    // ✅ 404 自动跳回首页
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
+  ],
 })
 
 export default router
