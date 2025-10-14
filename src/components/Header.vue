@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div><span @click="toHome">FunSpace</span></div>
+        <div><span @click="toHome">OnlinGames</span></div>
         <div>Games</div>
     </div>
 </template>
