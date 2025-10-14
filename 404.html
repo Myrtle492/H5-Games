@@ -1,9 +1,34 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Redirecting…</title>
-<meta http-equiv="refresh" content="0; url=/H5-Games/">
-<link rel="canonical" href="/H5-Games/">
-<script>
-  // 更可靠：JS 强制跳转到首页
-  location.replace('/H5-Games/');
-</script>
+<html lang="en">
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+      color: #555;
+    }
+  </style>
+
+  <script>
+    // 自动识别 GitHub Pages 路径并跳转到首页
+    (function() {
+      const { host, protocol } = window.location;
+      // 当前路径的前两级（例如 /username/repo/）
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+
+      // 如果是 GitHub Pages 用户页（例如 username.github.io）
+      let basePath = '/';
+      if (host.includes('github.io') && pathParts.length >= 2) {
+        basePath = '/' + pathParts[0] + '/' + pathParts[1] + '/';
+      }
+
+      // 跳转到首页
+      const homeUrl = protocol + '//' + host + basePath;
+      window.location.replace(homeUrl);
+    })();
+  </script>
+
+  <p>Redirecting to home page…</p>
+</html>
