@@ -27,7 +27,8 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install deps
+      # 更稳定：按 package-lock.json 安装
+      - name: Install deps (npm ci)
         run: npm ci
 
       - name: Build
@@ -36,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./dist   # Vite 打包输出目录
 
   deploy:
     needs: build
