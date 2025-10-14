@@ -1,4 +1,4 @@
-name: Deploy Vite Site to GitHub Pages
+name: Deploy Vite site to GitHub Pages
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -32,7 +32,7 @@ jobs:
       - name: Build Vite site
         run: npm run build
 
-      - name: Upload artifact
+      - name: Upload build output
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
