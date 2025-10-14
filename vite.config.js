@@ -2,10 +2,9 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// ✅ Vite 全局配置（支持 GitHub Pages + 自定义域名）
+// ✅ 确保 base 为根路径
 export default defineConfig({
-  // 自定义域名必须用根路径
-  base: '/',
+  base: '/', // ⚠️ 必须是 '/'，不要写 '/homepage/'
   plugins: [vue()],
   resolve: {
     alias: {
@@ -15,10 +14,6 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'static',
-    sourcemap: false,
-  },
-  server: {
-    port: 5173,
-    open: true,
   }
 })
+
