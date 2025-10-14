@@ -3,14 +3,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
-  base: '/H5-Games/',   // 👈 必须加上这一行！
+  base: '/',                 // ← 自定义域名必须用根路径
   plugins: [vue()],
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }
   },
-  build: {
-    assetsDir: 'static'
-  }
+  build: { assetsDir: 'static' } // 可有可无，保持即可
 })
