@@ -76,4 +76,47 @@ onMounted(() => {
 
   // 兼容数组下标与通过 id 查找两种结构
   const item =
-    data[id] |
+    data[id] ||
+    (Array.isArray(data) ? data.find(g => String(g.id) === String(id)) : null) ||
+    (Array.isArray(data) ? data[0] : {})
+
+  obj.value = item || {}
+})
+
+/** 打开播放弹层 */
+const toPlay = () => {
+  show.value = true
+}
+
+/** 相似游戏点击回调 */
+const handleChildEvent = (item) => {
+  if (!item) return
+  obj.value = item
+  show.value = false
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+</script>
+
+<style scoped>
+.detail-page { width: 100%; }
+.detail .content { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+.icon img {
+  width: 140px; height: 140px; object-fit: cover;
+  border-radius: 12px; display: block;
+}
+
+.info .name { font-size: 20px; font-weight: 600; margin: 10px 0 6px; }
+.info .category { font-size: 13px; color: #64748b; }
+
+.desc { margin: 14px 0; line-height: 1.7; color: #334155; }
+
+.play {
+  display: inline-block; padding: 10px 16px; background: #25b3e5;
+  color: #fff; border-radius: 8px; cursor: pointer; user-select: none;
+  margin-bottom: 12px;
+}
+.play:hover { opacity: .95; }
+</style>
