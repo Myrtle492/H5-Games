@@ -2,8 +2,7 @@
   <section class="content-info">
     <h2>Game Introduction</h2>
     <p>
-      This online browser game is designed for quick and casual fun. No download
-      is required — open and play instantly on mobile or desktop.
+      This online browser game is designed for quick and casual fun. No download is required — open and play instantly on mobile or desktop.
     </p>
 
     <h3>How to Play</h3>
@@ -15,45 +14,23 @@
 
     <h3>Why Players Like It</h3>
     <p>
-      Short rounds, instant feedback and low learning curve make it perfect for
-      office breaks and mobile users. It’s lightweight, smooth and easy to retry.
+      Short rounds, instant feedback and a low learning curve make it perfect for office breaks and mobile users.
     </p>
 
     <h3>Tips</h3>
     <p>
-      Focus on timing and rhythm rather than rushing. Practice 3–5 rounds and
-      your average score will improve significantly.
+      Focus on timing and rhythm rather than rushing. Practice 3–5 rounds and your average score will improve.
     </p>
   </section>
 </template>
 
 <script setup>
-// 纯静态说明块，不依赖任何 props/state，避免耦合现有页面逻辑
+// 纯静态说明块，不依赖任何数据
 </script>
 
 <style scoped>
-.content-info {
-  padding: 20px;
-  line-height: 1.75;
-  font-size: 15px;
-  color: #1f2937; /* slate-800 */
-  background: #ffffff;
-  border-top: 1px solid #eef2f7;
-  margin-top: 20px;
-}
-
-.content-info h2 {
-  font-size: 20px;
-  margin: 0 0 10px;
-}
-
-.content-info h3 {
-  font-size: 16px;
-  margin: 18px 0 8px;
-}
-
-.content-info ul {
-  padding-left: 18px;
-  margin: 0;
-}
+.content-info { padding:20px; line-height:1.75; font-size:15px; color:#1f2937; background:#fff; border-top:1px solid #eef2f7; margin-top:20px; }
+.content-info h2 { font-size:20px; margin:0 0 10px; }
+.content-info h3 { font-size:16px; margin:18px 0 8px; }
+.content-info ul { padding-left:18px; margin:0; }
 </style>
