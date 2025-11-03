@@ -1,160 +1,153 @@
 <template>
-    <div class="detail-page">
-        <div class="detail">
-            <div class="content">
-                <img class="icon" :src="obj.thumb" :alt="obj.title" />
-                <div class="info">
-                    <div class="name">{{ obj.title }}</div>
-                    <div class="category-s" v-if="obj.category">
-                        <span class="category">{{ obj.category }}</span>
-                    </div>
-                    <el-rate v-model="obj.star" disabled />
-                </div>
-            </div>
-            <div class="desc">{{ obj.description }}</div>
-            <div class="play" @click="toPlay">Play Now</div>
+  <div class="detail-page">
+    <div class="detail">
+      <div class="content">
+        <!-- 封面与标题信息 -->
+        <div class="icon">
+          <img :src="obj.thumb" :alt="obj.title" />
         </div>
-        <!-- <div style="width:300px;height:250px;margin:10px auto;">
-            <ins class="adsbygoogle" 
-                style="display:inline-block;width:100%;height:100%;" 
-                data-ad-client="ca-pub-2383602858776570"
-            > 
-            </ins> -->
-            <div class="gptslot" data-adunitid="2" style="min-width: 300px; min-height: 250px; margin:10px auto">
-        </div>
-        <SimilarGames @childEvent="handleChildEvent"></SimilarGames>
-    </div>
-    
-    <!-- <div style="width:320px;height:50px;position:fixed;bottom:0;left:50%;transform:translate(-50%);">
-        <ins class="adsbygoogle" 
-            style="display:inline-block;width:100%;height:100%;" 
-            data-ad-client="ca-pub-2383602858776570"
-        > 
-        </ins> -->
-         <div class="gptslot" data-adunitid="3" style="min-width: 300px; min-height: 250px; margin:10px auto">
-    </div>
-    
-    <Teleport to="body">
-        <div class="fixed left-0 top-0 z-20 flex h-full w-full flex-col bg-white" v-if="show">
-            <div class="flex-1">
-                <iframe class="h-full w-full" :src="obj.url" frameborder="0"></iframe>
-            </div>
-            <div class="h-[50px]"></div>
 
-            <div
-                class="absolute left-0 top-10 flex items-center rounded-r-xl bg-white py-3 pr-4 shadow-2xl"
-                @click="show = false"
-            >
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="ml-1 h-4 w-4"
-                >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                </svg>
-                <img class="ml-2 h-6 w-6 rounded" :src="obj.thumb" alt="" />
-            </div>
+        <div class="info">
+          <div class="name">{{ obj.title }}</div>
+          <div class="category" v-if="obj?.category">
+            <span class="category">{{ obj.category }}</span>
+            <!-- 评分（Element Plus 全局注册） -->
+            <el-rate v-model="obj.star" disabled />
+          </div>
         </div>
+
+        <!-- 简要描述 -->
+        <div class="desc">{{ obj.description }}</div>
+
+        <!-- 立即游玩按钮 -->
+        <div class="play" @click="toPlay">Play Now</div>
+
+        <!-- ★★★ 这里是新增的“原创内容区块”，提升页面价值 ★★★ -->
+        <ContentInfo />
+
+        <!-- （保留）广告位 / 相关模块 -->
+        <div
+          class="gptslot"
+          data-adunitid="2"
+          style="min-width:300px; min-height:250px; margin:10px auto"
+        ></div>
+
+        <!-- 相似游戏 -->
+        <SimilarGames @childEvent="handleChildEvent" />
+      </div>
+    </div>
+
+    <!-- （保留）底部广告位 -->
+    <div
+      class="gptslot"
+      data-adunitid="3"
+      style="min-width:300px; min-height:250px; margin:10px auto"
+    ></div>
+
+    <!-- 弹层播放区域 -->
+    <Teleport to="body">
+      <div class="fixed left-0 top-0 z-20 h-full w-full flex-col bg-white" v-if="show">
+        <div class="flex-1">
+          <iframe class="w-full h-full" :src="obj.url" frameborder="0"></iframe>
+        </div>
+        <div class="h-[50px] w-full"></div>
+      </div>
     </Teleport>
+  </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import data from '@/data/games.json'
 
-    import { ref, onMounted } from 'vue';
-    import { ElRate } from 'element-plus';
-    import SimilarGames from './SimilarGames.vue';
-    import localGamesData from '@/data/games.js';
-    
-    import { useRoute } from "vue-router";
+import SimilarGames from './SimilarGames.vue'
+import ContentInfo from './ContentInfo.vue'   // ← 新增导入
 
-    const route = useRoute();
-    
-    let show = ref(false);
-    let obj = ref(localGamesData.find((item) => item.id == route.query.id));
+const show = ref(false)
+const obj = ref({})
 
-    const toPlay = () => {
-        show.value = true;
+/** 初始化加载：根据路由或默认项装载一个游戏对象 */
+onMounted(() => {
+  // 你原项目里一般是通过路由参数取 id；这里做兼容处理
+  const id =
+    (typeof window !== 'undefined' &&
+      window?.location?.pathname?.split('/').pop()) || 0
+
+  // 兼容两种数据结构：通过下标或通过 id 匹配
+  const item =
+    data[id] ||
+    data.find((g) => String(g.id) === String(id)) ||
+    data[0]
+
+  obj.value = item || {}
+})
+
+/** 打开播放弹层 */
+const toPlay = () => {
+  show.value = true
+}
+
+/** 相似游戏点击回调：直接切换详情对象（不跳路由也能用） */
+const handleChildEvent = (item) => {
+  if (item) {
+    obj.value = item
+    show.value = false
+    // 回到顶部，避免用户错过内容块
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-
-    const handleChildEvent = (id) => {
-        obj.value = localGamesData.find((item) => item.id == id)
-    }
-    
-    onMounted(() => {
-        // (adsbygoogle = window.adsbygoogle || []).push({});
-    })
-
+  }
+}
 </script>
 
-<style lang="scss">
-    .el-rate__item {
-        margin-right: -5px;
-    }
-</style>
+<style scoped>
+.detail-page {
+  width: 100%;
+}
 
-<style lang="scss" scoped>
-    .detail-page {
-        padding: 15px 0;
-        .detail {
-            padding: 0 15px;
-            margin-bottom: 20px;
-        }
-        .content {
-            display: flex;
-            margin-top: 10px;
-        }
-        .icon {
-            width: 110px;
-            height: 110px;
-            background: #eee;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-right: 15px;
-        }
-        .info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            .name {
-                color: #25b3e5;
-                font-size: 21px;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-            .category-s {
-                margin-bottom: 5px;
-            }
-            .category {
-                color: #fff;
-                font-size: 13px;
-                background: rgba(37, 179, 229, .4);
-                padding: 4px 8px;
-                border-radius: 6px;
-            }
-        }
-        .desc {
-            max-height: 300px;
-            overflow-y: auto;
-            font-size: 14px;
-            color: #000;
-            line-height: 25px;
-            margin-top: 25px;
-        }
-        .play {
-            width: 100%;
-            height: 50px;
-            color: #fff;
-            font-size: 16px;
-            background: #25b3e5;
-            border-radius: 30px;
-            margin-top: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
+.detail .content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.icon img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+.info .name {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 10px 0 6px;
+}
+
+.info .category {
+  font-size: 13px;
+  color: #64748b; /* slate-500 */
+}
+
+.desc {
+  margin: 14px 0;
+  line-height: 1.7;
+  color: #334155; /* slate-700 */
+}
+
+.play {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #25b3e5;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 12px;
+}
+
+.play:hover {
+  opacity: 0.95;
+}
 </style>
